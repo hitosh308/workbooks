@@ -21,6 +21,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
+use App\Poc\GoogleOidc;
 use Cake\Routing\Route\DashedRoute;
 use Cake\Routing\RouteBuilder;
 
@@ -48,6 +49,14 @@ return function (RouteBuilder $routes): void {
      * `{action}` markers.
      */
     $routes->setRouteClass(DashedRoute::class);
+
+    if (GoogleOidc::enabled()) {
+        $routes->prefix('Poc', function (RouteBuilder $builder): void {
+            $builder->get('/google-oidc', 'GoogleOidc::index', 'poc-google-oidc');
+            $builder->post('/google-oidc/start', 'GoogleOidc::start', 'poc-google-oidc-start');
+            $builder->get('/google-oidc/callback', 'GoogleOidc::callback');
+        });
+    }
 
     $routes->scope('/', function (RouteBuilder $builder): void {
         /*
